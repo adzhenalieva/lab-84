@@ -10,8 +10,8 @@ router.post('/', (req, res) => {
     user.generateToken();
 
     user.save()
-        .then(user => res.send({token: user.token})
-            .catch(error => res.sendStatus(400).send(error)))
+        .then(user => res.send({token: user.token}))
+        .catch(error => res.sendStatus(400).send(error))
 });
 
 router.post('/sessions', async (req, res) => {
@@ -27,9 +27,9 @@ router.post('/sessions', async (req, res) => {
         return res.status(400).send({error: 'Password is wrong'});
     }
 
-    await user.generateToken();
+    user.generateToken();
 
-    res.send({token: user.token});
+    return res.send({token: user.token});
 });
 
 

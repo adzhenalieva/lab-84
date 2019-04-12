@@ -11,9 +11,9 @@ router.get('/', auth, (req, res) => {
 });
 
 
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, (req, res) => {
     const task = new Task(req.body);
-    task.user = await req.user._id;
+    task.user = req.user._id;
     task.save()
         .then(result => res.send(result))
         .catch(() => res.sendStatus(400).send(error))

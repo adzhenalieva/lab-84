@@ -7,14 +7,14 @@ const auth = async (req, res, next) => {
         return res.status(401).send('Token not provided');
     }
 
-    const user = await User.findOne({token});
+    const user = await User.findOne({token: token});
 
     if (!user) {
-        return res.status(401).send('Not authorized')
+        return res.status(401).send({error: "Token incorrect"})
     }
 
     req.user = user;
-    
+
     next()
 };
 
