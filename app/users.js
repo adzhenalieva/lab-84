@@ -4,6 +4,13 @@ const bcrypt = require("bcrypt");
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+
+    User.find()
+        .then(tasks => res.send(tasks))
+        .catch(() => res.sendStatus(500))
+});
+
 router.post('/', (req, res) => {
     const user = new User(req.body);
 
@@ -15,7 +22,8 @@ router.post('/', (req, res) => {
 });
 
 router.post('/sessions', async (req, res) => {
-    const user = await User.findOne({username: req.body.username});
+     const user = await User.findOne({username: req.body.username});
+
 
     if (!user) {
         return res.status(400).send({error: 'Username not found'});
@@ -27,7 +35,11 @@ router.post('/sessions', async (req, res) => {
         return res.status(400).send({error: 'Password is wrong'});
     }
 
+
+
+
     user.generateToken();
+    user.save();
 
     return res.send({token: user.token});
 });
