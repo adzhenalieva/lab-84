@@ -4,12 +4,6 @@ const bcrypt = require("bcrypt");
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-
-    User.find()
-        .then(tasks => res.send(tasks))
-        .catch(() => res.sendStatus(500))
-});
 
 router.post('/', (req, res) => {
     const user = new User(req.body);
@@ -35,9 +29,7 @@ router.post('/sessions', async (req, res) => {
         return res.status(400).send({error: 'Password is wrong'});
     }
 
-
-
-
+    
     user.generateToken();
     user.save();
 
