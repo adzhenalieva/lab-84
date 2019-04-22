@@ -11,7 +11,6 @@ router.get('/', auth, (req, res) => {
         .catch(() => res.sendStatus(500))
 });
 
-
 router.post('/', auth, (req, res) => {
     const task = new Task(req.body);
     task.user = req.user._id;
@@ -23,9 +22,9 @@ router.post('/', auth, (req, res) => {
 router.put('/:id', auth, async (req, res) => {
     const newTask = req.body;
     if (newTask.user) {
-        res.status(401).send({error: "No way of changing user"})
+        res.status(401).send({error: "You do not have no permission to change user"})
     }
-    const task = await Task.findById(req.params.id);
+    const task = await Task.find({user: req.user._id});
 
     task.description = newTask.description;
     task.title = newTask.title;
@@ -37,8 +36,11 @@ router.put('/:id', auth, async (req, res) => {
 
 });
 
-router.delete('/:id', auth, (req, res) => {
-    Task.findByIdAndDelete(req.params.id)
+router.delete('/:id', auth, async (req, res) => {
+
+    const task = await Task.find(req.user._id);
+
+    Task.deleteOne({_id: task._id})
         .then(() => res.send({message: "Success"}))
         .catch(() => res.sendStatus(500))
 });
